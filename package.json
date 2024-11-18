@@ -1,5 +1,5 @@
 {
-  "name": "arca",
+  "name": "arca-wsass",
   "version": "1.0.0",
   "description": "A Node.js client for interacting with ARCA's SOAP web services.",
   "main": "index.js",
