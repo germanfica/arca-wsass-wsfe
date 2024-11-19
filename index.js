@@ -44,11 +44,11 @@ const callWsaa = async (wsdlUrl, cmsFile) => {
 
 const main = async () => {
   try {
-    const cert = process.env['CERT_PATH'] || 'certs/test.crt';
-    const privateKey = process.env['PRIVATE_KEY_PATH'] || 'certs/MiClavePrivada.key';
-    const serviceId = process.env['SERVICE_ID'] || 'wsfe';
-    const xmlFile = process.env['XML_FILE'] || 'LoginTicketRequest.xml';
-    const wsdlUrl = process.env['WSDL_URL'] || 'https://wsaahomo.afip.gov.ar/ws/services/LoginCms?WSDL';
+    const cert = process.env['CERT_PATH'];
+    const privateKey = process.env['PRIVATE_KEY_PATH'];
+    const serviceId = process.env['SERVICE_ID'];
+    const xmlFile = process.env['XML_FILE'];
+    const wsdlUrl = process.env['WSDL_URL'];
 
     // Paso 1: Generar el XML
     const xmlContent = generateXml(serviceId);
