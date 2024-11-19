@@ -1,3 +1,11 @@
+# Xmls
+*.xml
+*.cms
+*.cms.der
+
+# Certs
+certs
+
 # Logs
 logs
 *.log
