@@ -6,7 +6,7 @@ Básicamente, el WSASS genera certificados digitales para testing. Dichos certif
 
 ## Set enviroment variables
 
-Windows:
+Windows example:
 
 ```bash
 # Establecer las variables de entorno
