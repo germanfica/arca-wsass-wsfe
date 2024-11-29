@@ -10,15 +10,15 @@ const generateXml = (serviceId, timestamp) => {
   const uniqueId = format(now, 'yyMMddHHmm');
 
   const xml = `
-        <loginTicketRequest>
-            <header>
-                <uniqueId>${uniqueId}</uniqueId>
-                <generationTime>${generationTime}</generationTime>
-                <expirationTime>${expirationTime}</expirationTime>
-            </header>
-            <service>${serviceId}</service>
-        </loginTicketRequest>
-    `;
+  <loginTicketRequest>
+      <header>
+          <uniqueId>${uniqueId}</uniqueId>
+          <generationTime>${generationTime}</generationTime>
+          <expirationTime>${expirationTime}</expirationTime>
+      </header>
+      <service>${serviceId}</service>
+  </loginTicketRequest>
+  `;
 
   return xml.trim();
 };
