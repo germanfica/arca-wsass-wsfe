@@ -3,10 +3,10 @@ import { execSync } from 'child_process';
 import { createClientAsync } from 'soap';
 import { format } from 'date-fns';
 
-const generateXml = (serviceId) => {
+const generateXml = (serviceId, timestamp) => {
   const now = new Date();
-  const generationTime = format(new Date(now.getTime() - 10 * 60 * 1000), "yyyy-MM-dd'T'HH:mm:ss");
-  const expirationTime = format(new Date(now.getTime() + 10 * 60 * 1000), "yyyy-MM-dd'T'HH:mm:ss");
+  const generationTime = format(new Date(timestamp - 10 * 60 * 1000), "yyyy-MM-dd'T'HH:mm:ss");
+  const expirationTime = format(new Date(timestamp + 10 * 60 * 1000), "yyyy-MM-dd'T'HH:mm:ss");
   const uniqueId = format(now, 'yyMMddHHmm');
 
   const xml = `
@@ -42,6 +42,14 @@ const callWsaa = async (wsdlUrl, cmsFile) => {
   return response[0];
 };
 
+const saveResponseXml = (xmlContent, timestamp) => {
+  const fileNameTimestamp = format(new Date(timestamp), 'yyyyMMddHHmm');
+  const fileName = `${fileNameTimestamp}-loginTicketResponse.xml`;
+
+  writeFileSync(fileName, xmlContent, 'utf-8');
+  console.log(`Archivo guardado: ${fileName}`);
+};
+
 const main = async () => {
   try {
     const cert = process.env['CERT_PATH'];
@@ -49,9 +57,10 @@ const main = async () => {
     const serviceId = process.env['SERVICE_ID'];
     const xmlFile = process.env['XML_FILE'];
     const wsdlUrl = process.env['WSDL_URL'];
+    const timestamp = Date.now();
 
     // Paso 1: Generar el XML
-    const xmlContent = generateXml(serviceId);
+    const xmlContent = generateXml(serviceId, timestamp);
     writeFileSync(xmlFile, xmlContent);
 
     // Paso 2: Firmar el XML
@@ -59,6 +68,7 @@ const main = async () => {
 
     // Paso 3: Invocar al WSAA
     const response = await callWsaa(wsdlUrl, cmsFile);
+    saveResponseXml(response.loginCmsReturn, timestamp);
     console.log('Respuesta WSAA:', response);
   } catch (error) {
     console.error('Error:', error.message);
