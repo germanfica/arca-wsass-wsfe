@@ -3,13 +3,13 @@ import { execSync } from 'child_process';
 import { createClientAsync } from 'soap';
 import { format } from 'date-fns';
 
-const generateFileName = (prefix, timestamp, extension = 'xml') => {
+const generateFilename = (prefix, timestamp, extension = 'xml') => {
   const fileNameTimestamp = format(new Date(timestamp), 'yyyyMMddHHmm');
   return `${fileNameTimestamp}-${prefix}.${extension}`;
 };
 
 const saveXmlFile = (content, prefix, timestamp, extension = 'xml') => {
-  const fileName = generateFileName(prefix, timestamp, extension);
+  const fileName = generateFilename(prefix, timestamp, extension);
   writeFileSync(fileName, content, 'utf-8');
   console.log(`Archivo guardado: ${fileName}`);
 };
@@ -34,11 +34,11 @@ const generateXml = (serviceId, timestamp) => {
   return xml.trim();
 };
 
-const signCms = (xmlFile, cert, privateKey) => {
-  const signedFile = `${xmlFile}.cms`;
-  const signedFileDER = `${xmlFile}.cms.der`;
+const signCms = (xmlFilename, cert, privateKey) => {
+  const signedFile = `${xmlFilename}.cms`;
+  const signedFileDER = `${xmlFilename}.cms.der`;
 
-  execSync(`openssl cms -sign -in ${xmlFile} -signer ${cert} -inkey ${privateKey} -nodetach -outform der -out ${signedFileDER}`);
+  execSync(`openssl cms -sign -in ${xmlFilename} -signer ${cert} -inkey ${privateKey} -nodetach -outform der -out ${signedFileDER}`);
   execSync(`openssl base64 -in ${signedFileDER} -out ${signedFile}`);
 
   return signedFile;
@@ -59,15 +59,16 @@ const main = async () => {
     const privateKey = process.env['PRIVATE_KEY_PATH'];
     const serviceId = process.env['SERVICE_ID'];
     const wsdlUrl = process.env['WSDL_URL'];
+    const xmlPrefix = process.env['XML_FILE'];
     const timestamp = Date.now();
 
     // Paso 1: Generar el XML
     const xmlContent = generateXml(serviceId, timestamp);
-    saveXmlFile(xmlContent, 'loginTicketRequest', timestamp);
+    saveXmlFile(xmlContent, xmlPrefix, timestamp);
 
     // Paso 2: Firmar el XML
-    const xmlFile = generateFileName('loginTicketRequest', timestamp);
-    const cmsFile = signCms(xmlFile, cert, privateKey);
+    const xmlFilename = generateFilename(xmlPrefix, timestamp);
+    const cmsFile = signCms(xmlFilename, cert, privateKey);
 
     // Paso 3: Invocar al WSAA
     const response = await callWsaa(wsdlUrl, cmsFile);
