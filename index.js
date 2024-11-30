@@ -5,7 +5,8 @@ import { format } from 'date-fns';
 
 const generateFilename = (prefix, timestamp, extension = 'xml') => {
   const fileNameTimestamp = format(new Date(timestamp), 'yyyyMMddHHmm');
-  return `${fileNameTimestamp}-${prefix}.${extension}`;
+  const hasExtension = /\.[a-z0-9]+$/i.test(prefix); // Check if the prefix already has an extension.
+  return hasExtension ? `${fileNameTimestamp}-${prefix}` : `${fileNameTimestamp}-${prefix}.${extension}`;
 };
 
 const saveXmlFile = (content, prefix, timestamp, extension = 'xml') => {
