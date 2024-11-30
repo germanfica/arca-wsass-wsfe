@@ -53,6 +53,16 @@ const generateLoginTicketRequestXml = (serviceId, timestamp) => {
 };
 
 /**
+ * Escapes shell arguments for OpenSSL to prevent command injection.
+ * @param {string} arg - The argument to escape.
+ * @returns {string} - The escaped argument.
+ */
+const escapeShellArg = (arg) => {
+  // En Windows, no usamos comillas adicionales porque OpenSSL no las necesita.
+  return arg.replace(/(["$`\\])/g, '\\$1'); // Escapa caracteres especiales en sistemas Unix y Windows.
+};
+
+/**
  * Signs an XML file using OpenSSL and returns the signed filename.
  * @param {string} xmlFilename - The XML filename to sign.
  * @param {string} cert - The path to the certificate.
@@ -61,8 +71,12 @@ const generateLoginTicketRequestXml = (serviceId, timestamp) => {
  */
 const signCms = (xmlFilename, cert, privateKey) => {
   try {
+    const escapedXml = escapeShellArg(xmlFilename);
+    const escapedCert = escapeShellArg(cert);
+    const escapedKey = escapeShellArg(privateKey);
+
     const signedFileDER = `${xmlFilename}.cms.der`;
-    execSync(`openssl cms -sign -in ${xmlFilename} -signer ${cert} -inkey ${privateKey} -nodetach -outform der -out ${signedFileDER}`);
+    execSync(`openssl cms -sign -in ${escapedXml} -signer ${escapedCert} -inkey ${escapedKey} -nodetach -outform der -out ${signedFileDER}`);
     execSync(`openssl base64 -in ${signedFileDER} -out ${xmlFilename}.cms`);
     return `${xmlFilename}.cms`;
   } catch (error) {
