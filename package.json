@@ -16,5 +16,10 @@
     "date-fns": "^4.1.0",
     "https": "^1.0.0",
     "soap": "^1.1.6"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.16.0",
+    "eslint": "^9.16.0",
+    "globals": "^15.12.0"
   }
 }
