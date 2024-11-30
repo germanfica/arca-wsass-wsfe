@@ -15,7 +15,7 @@ const saveXmlFile = (content, prefix, timestamp, extension = 'xml') => {
   console.log(`Archivo guardado: ${fileName}`);
 };
 
-const generateXml = (serviceId, timestamp) => {
+const generateLoginTicketRequestXml = (serviceId, timestamp) => {
   const now = new Date();
   const generationTime = format(new Date(timestamp - 10 * 60 * 1000), "yyyy-MM-dd'T'HH:mm:ss");
   const expirationTime = format(new Date(timestamp + 10 * 60 * 1000), "yyyy-MM-dd'T'HH:mm:ss");
@@ -64,7 +64,7 @@ const main = async () => {
     const timestamp = Date.now();
 
     // Paso 1: Generar el XML
-    const xmlContent = generateXml(serviceId, timestamp);
+    const xmlContent = generateLoginTicketRequestXml(serviceId, timestamp);
     saveXmlFile(xmlContent, xmlPrefix, timestamp);
 
     // Paso 2: Firmar el XML
