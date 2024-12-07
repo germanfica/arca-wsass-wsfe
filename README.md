@@ -1,4 +1,4 @@
-# ARCA WSASS
+# WSFE WSASS
 
 WSASS (Web Service Authorization and Security System) es una aplicación web que permite a los programadores gestionar certificados digitales y configurar autorizaciones de acceso a los webservices SOAP del entorno de testing de ARCA (Agencia de Recaudación y Control Aduanero) de Argentina.
 
@@ -16,3 +16,7 @@ $env:SERVICE_ID = "wsfe"
 $env:XML_FILE = "LoginTicketRequest.xml"
 $env:WSDL_URL = "https://wsaahomo.afip.gov.ar/ws/services/LoginCms?WSDL"
 ```
+
+## Disclaimer
+
+Este software y sus desarrolladores no tienen ninguna relación con ARCA (anteriormente AFIP). Este proyecto es una herramienta independiente desarrollada con fines educativos o funcionales y no está respaldado, aprobado ni afiliado de ninguna manera con la ARCA.
